@@ -1,5 +1,4 @@
 import json
-from pymysql import cursors
 import requests
 from datetime import datetime, timedelta
 from dotenv import load_dotenv
@@ -78,6 +77,7 @@ def lambda_handler(event="", context=""):
         cursor.executemany("INSERT INTO forecast (city_id, air_pressure, applicable_date, humidity, max_temp, min_temp, predictability, cur_temp, visibility, weather_state_abbr, weather_state_name, wind_direction, wind_direction_compass, wind_speed) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)" , values)
         connection.commit()
 
-    return
-
-lambda_handler()
+    return {
+    'statusCode': 200,
+    'body': json.dumps('Hello from Lambda!')
+    }
