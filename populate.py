@@ -37,30 +37,28 @@ def lambda_handler(event="", context=""):
     
     for location in locations:
         
-        resp = requests.get(weatherAPI+location[1]+"/")
-        resp = resp.json()
+        # Initial thought fetch days ahead and for each non existing request more info
+        # resp = requests.get(weatherAPI+location[1]+"/")
+        # resp = resp.json()
+        # weather = resp["consolidated_weather"]
+        # dateDiff = get_date_diff(weather[0]["applicable_date"], weather[-1]["applicable_date"]) 
 
-        weather = resp["consolidated_weather"]
+        weather = requests.get(weatherAPI+location[1]+"/"+datetime.today().strftime("%Y/%m/%d")).json()
 
-        dateDiff = get_date_diff(weather[0]["applicable_date"], weather[-1]["applicable_date"]) 
-        if dateDiff<7:
-            for i in range(7-dateDiff):
-                nextDate=get_next_day(weather[-1]["applicable_date"])
+        for i in range(6):
+            nextDate=get_next_day(weather[-1]["applicable_date"])
 
-                day = requests.get(weatherAPI+location[1]+"/"+nextDate)
-                day = day.json()
+            day = requests.get(weatherAPI+location[1]+"/"+nextDate)
+            day = day.json()
 
-                weather.append(day[0])
+            weather = weather + day
 
-
-        print(json.dumps(weather, indent=4, sort_keys=True))
-        
         values = []
         for report in weather:
             values.append([
                 location[2], 
                 report["air_pressure"], 
-                report["applicable_date"], 
+                datetime.fromisoformat(report["created"].replace('Z', '+00:00')).strftime("%Y/%m/%d %H:%M:%S"),
                 report["humidity"],
                 report["max_temp"],
                 report["min_temp"],
@@ -81,3 +79,5 @@ def lambda_handler(event="", context=""):
     'statusCode': 200,
     'body': json.dumps('Hello from Lambda!')
     }
+
+lambda_handler()
