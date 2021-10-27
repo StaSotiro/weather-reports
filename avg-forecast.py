@@ -31,8 +31,11 @@ def avg_forecast():
     "WHERE  tops.city_id=cities.id "+
     "GROUP BY DATE_FORMAT(applicable_date , '%Y-%m-%d '), tops.city_id")
 
-    resp = Response()
-    resp.body = cursor.fetchall()
+    resp = {
+        "status": 200,
+        "body": cursor.fetchall()
+    }
+    # resp.body = cursor.fetchall()
 
     return resp
 

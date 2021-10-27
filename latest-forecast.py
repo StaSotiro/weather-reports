@@ -21,9 +21,13 @@ class Response:
 def latest_forecast():
 
     cursor.execute("SELECT cities.name, tab.* FROM(SELECT max(applicable_date) AS latest_date, forecast.* FROM forecast group by city_id ORDER BY applicable_date DESC) AS tab, cities WHERE city_id=cities.id")
-    resp = Response()
-    resp.body = cursor.fetchall()
-
+    # resp = Response()
+    # resp.body = cursor.fetchall()
+    
+    resp={
+        "status": 200,
+        "body": cursor.fetchall()
+    }
     return resp
 
 latest_forecast()

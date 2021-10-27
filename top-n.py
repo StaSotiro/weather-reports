@@ -36,16 +36,21 @@ def top_n(n=3):
         (n,n,n,n,n,n,n)
     )
 
-    resp3 = cursor.fetchall()
-    finalResp = Response()
-    finalResp.humidity = resp3
+    resp = cursor.fetchall()
+    # finalResp = Response()
+    # finalResp.humidity = resp
+    respObj = {
+        "status": 200,
+        "humidity": resp
+    }
     
     while cursor.nextset():
         nextRes = cursor.fetchall()
         listkeys=list(nextRes[0].keys())
-        # finalResp[listkeys[1]] = nextRes <-- Dynamic key creation (wanted to do)
-        setattr(finalResp, listkeys[1], nextRes)
+        # setattr(finalResp, listkeys[1], nextRes)
 
-    return finalResp
+        respObj[listkeys[1]] = nextRes
+
+    return respObj
 
 top_n()
