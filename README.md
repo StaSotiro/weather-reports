@@ -21,7 +21,7 @@ I used AWS as the prefered cloud for the services.
 
 #### Architecture Graph
 
-![image info](./overview.png)
+![image info](./graph.png)
 
 ### Hardest parts
 
