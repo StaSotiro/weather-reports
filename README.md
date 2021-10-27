@@ -23,6 +23,54 @@ I used AWS as the prefered cloud for the services.
 
 ![image info](./graph.png)
 
+### Easier to read SQL queries
+
+#### Query 1
+
+```
+SELECT cities.name, tab.*
+FROM(
+	select max(applicable_date) as latest_date, forecast.*
+	from forecast
+	group by city_id
+	order by applicable_date desc
+) AS tab,
+cities
+WHERE city_id=cities.id
+```
+
+#### Query 2
+
+```
+WITH top_forecasts AS (
+  SELECT f.*, ROW_NUMBER() OVER (PARTITION BY  city_id,DATE_FORMAT(applicable_date , '%Y-%m-%d ') ORDER BY applicable_date DESC) AS rn
+  FROM forecast AS f
+)
+
+SELECT tops.city_id, cities.name, avg(cur_temp), DATE_FORMAT(applicable_date , '%Y-%m-%d ') as the_day
+FROM (
+	SELECT *
+	FROM top_forecasts
+	where rn<=3
+) as tops, cities
+where  tops.city_id=cities.id
+group by DATE_FORMAT(applicable_date , '%Y-%m-%d '), tops.city_id
+```
+
+#### Query(ies) 3
+
+```
+
+SELECT cities.name, humidity FROM forecast, cities where cities.id=city_id ORDER BY humidity  DESC LIMIT 3;
+SELECT cities.name, max_temp FROM forecast, cities where cities.id=city_id ORDER BY max_temp  DESC LIMIT 3;
+SELECT cities.name, air_pressure FROM forecast, cities where cities.id=city_id ORDER BY air_pressure  DESC LIMIT 3;
+SELECT cities.name, min_temp FROM forecast, cities where cities.id=city_id ORDER BY min_temp  DESC LIMIT 3;
+SELECT cities.name, cur_temp FROM forecast, cities where cities.id=city_id ORDER BY cur_temp  DESC LIMIT 3;
+SELECT cities.name, visibility FROM forecast, cities where cities.id=city_id ORDER BY visibility  DESC LIMIT 3;
+SELECT cities.name, wind_speed FROM forecast, cities where cities.id=city_id ORDER BY wind_speed  DESC LIMIT 3;
+
+```
+
 ### Hardest parts
 
 - Create the architecture
