@@ -51,4 +51,4 @@ I used AWS as the prefered cloud for the services.
 
 - https://help.dreamhost.com/hc/en-us/articles/115000695551-Installing-and-using-virtualenv-with-Python-3
 - https://medium.com/bi3-technologies/creating-python-deployment-package-for-aws-lambda-function-25205f033ac5
-- https://www.serverless.com/blog/serverless-python-packaging
+- https://www.serverless.com/blog/serverless-python-packaging -https://aws.amazon.com/blogs/compute/using-amazon-api-gateway-as-a-proxy-for-dynamodb/ - For API Gateway
